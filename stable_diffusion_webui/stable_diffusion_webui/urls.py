@@ -25,5 +25,8 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),   
     path("generate_image/", views.generate_image, name="generate_image"),   
+    path("history/", views.history, name="history"),   
+    path("history/<int:page>", views.history, name="history"),   
+    
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -62,21 +62,10 @@ $(document).ready(function(e){
                 btn.removeClass("disabled");
                 
                 var content = "";
-                for(var i=0; i<resp.matrix.length; i++) {
-                    var row = resp.matrix[i];
+                for(const row of resp.matrix) {
                     content += "<div class='row'>";
-                    for(var j=0; j<row.length; j++) {
-                        var item = row[j];
-                        var itemHtml = [
-                            '<div class="col-4">',
-                            '  <div class="card">',
-                            '    <img src="' + item.url + '" class="card-img-top" alt="' + item.text + '" />',
-                            '    <div class="card-body">',
-                            '      <p class="card-text">' + item.text + "</p>",
-                            '    </div>',
-                            '  </div>',
-                            '</div>'
-                        ].join("");
+                    for(const item of row) {
+                        let itemHtml = render_image(item);
                         content += itemHtml;
                     }
                     content += "</div>";

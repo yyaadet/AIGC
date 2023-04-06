@@ -1,0 +1,22 @@
+
+{% if pager %}
+  <ul class="pagination pagination-sm mt-3">
+  	  {% if pager.has_previous%}
+  	  <li class="page-item"><a class="page-link" href="{{prefix}}/1/?{{params}}">First</a></li>
+  	  {% endif %}
+
+  	  {% for page in pages %}
+  	  <li {% if pager.number == page %}class="page-item active" {% else %} class="page-item" {% endif %}>
+  	  	<a href="{{prefix}}/{{page}}/?{{params}}" class="page-link">{{page}}</a>
+  	  </li>
+  	  {% endfor %}
+
+
+  	  {% if pager.has_next %}
+  	  <li class="page-item"><a href="{{prefix}}/{{pager.paginator.num_pages}}/?{{params}}" class="page-link">Last</a></li>
+  	  {% endif %}
+
+  	  <li class="page-item disabled"><a href="javascript:void(0);" class="page-link">Item {{pager.paginator.count}}, Page {{pager.paginator.num_pages}}</a></li>
+  </ul>
+
+{% endif %}

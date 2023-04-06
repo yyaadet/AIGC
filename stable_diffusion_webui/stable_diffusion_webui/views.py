@@ -12,12 +12,13 @@ from itertools import combinations
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 from .models import Prompt, GenerateRequest
-from .utils import medium_options, list_to_matrix
+from .utils import medium_options, list_to_matrix, do_paginator
 
 
 pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
 pipe = pipe.to("mps")
 pipe.enable_attention_slicing()
+pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 
 
 def index(request):
@@ -27,8 +28,8 @@ def index(request):
     return render(request, "index.html", context)
 
 
-def get_history_prompts(request):
-    """Get history prompts
+def get_history_generate_request(request):
+    """Get generate request history
 
     Args:
         request (Request):  Get parameters: 
@@ -47,7 +48,7 @@ def get_history_prompts(request):
     page = request.GET.get("page", 1)
     page_size = request.GET.get("page_size", 50)
 
-    prompts = Prompt.objects.all()
+    prompts = Prompt.objects.sort_by("-id")
     paginator = Paginator(prompts, page_size)
     n = paginator.count
     resp = {
@@ -99,7 +100,6 @@ def generate_image(request):
     )
     generate_request = GenerateRequest.objects.create(request_body=body)
 
-    #pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
     generator = torch.Generator("mps").manual_seed(body.get("seed", 0))
 
     prompts = []
@@ -198,7 +198,11 @@ def generate_combinations(subject, mediums=[], styles=[], artistes=[], websites=
     return visited
 
             
-        
+def history(request, page=1):
+    generate_requests = GenerateRequest.objects.order_by("-id")
+    pager = do_paginator(generate_requests, page)
+
+    return render(request, "history.html", {'pager': pager, 'prefix': '/history/'})
 
     
 

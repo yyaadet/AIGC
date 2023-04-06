@@ -2,11 +2,22 @@ from django.db import models
 from django.core.files.storage import FileSystemStorage 
 import os
 
+from .utils import list_to_matrix
 
 
 class GenerateRequest(models.Model):
     request_body = models.JSONField()
     create_at = models.DateTimeField(auto_now_add=True)
+
+    @property
+    def prompt_matrix(self):
+        prompts = Prompt.objects.filter(request=self)
+        matrix = list_to_matrix(prompts, col=4)
+        return matrix
+    
+    @property
+    def prompt_count(self):
+        return Prompt.objects.filter(request=self).count()
 
 
 class Prompt(models.Model):

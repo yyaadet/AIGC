@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 
+from django.core.paginator import Paginator
+
 
 prompt_data = os.path.join(os.path.dirname(__file__), "prompt_data")
 
@@ -31,3 +33,9 @@ def list_to_matrix(items, col):
         m.append(row)
 
     return m
+
+
+def do_paginator(qs, page, page_size=10):
+    paginator = Paginator(qs, page_size)
+    pager = paginator.page(page)
+    return pager
