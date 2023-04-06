@@ -4,6 +4,7 @@ from django.core.paginator import Paginator
 from django.core.files.storage import FileSystemStorage 
 from django.conf import settings
 
+import threading
 import os
 import pandas as pd
 import json
@@ -28,44 +29,41 @@ def index(request):
     return render(request, "index.html", context)
 
 
-def get_history_generate_request(request):
-    """Get generate request history
+def get_generate_request(request):
+    """Get generate request information
 
     Args:
         request (Request):  Get parameters: 
-            1. page
-            2. page_size
+            1. req_id: generate request id
 
     Returns:
         JsonResponse: {
             "n": int,
-            "pages": int,
             "data": [
                 {"id": int, "text": str, "image": str, "create_at": str}
             ]
         }
     """
-    page = request.GET.get("page", 1)
-    page_size = request.GET.get("page_size", 50)
+    req_id = request.GET.get("req_id")
+    generate_request = GenerateRequest.objects.get(id=req_id)
 
-    prompts = Prompt.objects.sort_by("-id")
-    paginator = Paginator(prompts, page_size)
-    n = paginator.count
     resp = {
-        "n": n,
-        "pages": paginator.num_pages,
-        "data": []
+        "n": generate_request.prompt_count,
+        "data": [],
+        "matrix": []
     }
 
-    for p in paginator.page(page):
+    for p in generate_request.prompts():
         item = {
             "id": p.id,
             "text": p.text,
             "image": p.image,
+            'url': p.media_url(),
             "create_at": p.create_at.strftime("%Y-%m-%d %H:%M:%S"),
         }
         resp['data'].append(item)
-    
+
+    resp['matrix'] = list_to_matrix(resp['data'], col=3)
     return JsonResponse(resp)
 
 
@@ -98,19 +96,27 @@ def generate_image(request):
         body.get('color', []),
         body.get('lighting', []),
     )
-    generate_request = GenerateRequest.objects.create(request_body=body)
+    generate_request = GenerateRequest.objects.create(request_body=body, combinations=combs)
 
+    threading.Timer(1, do_generate_image, args=(body, combs, generate_request)).start()
+    resp = {
+        "id": generate_request.id,
+        "combs": combs
+    }
+    return JsonResponse(resp)
+
+
+def do_generate_image(body, combs, generate_request):
     generator = torch.Generator("mps").manual_seed(body.get("seed", 0))
 
     prompts = []
     store = FileSystemStorage()
     for comb in combs:
-        text = ",".join(list(comb))
-        _ = pipe(text, num_inference_steps=body.get("steps", 20), generator=generator)
-        image = pipe(text).images[0]
+        comb = list(filter(lambda x: x, comb))
+        text = ",".join(comb)
+        image = pipe(text, num_inference_steps=body.get('steps', 20), generator=generator).images[0]
         file_name = "_".join(list(comb)) + ".png"
         file_name = store.get_valid_name(file_name)
-        #store.save(file_name, image)
         image.save(store.path(file_name))
         
         prompt = Prompt.objects.create(
@@ -120,23 +126,7 @@ def generate_image(request):
         )
         prompts.append(prompt)
 
-    resp = {
-        "n": len(prompts),
-        "data": [],
-        'matrix': []
-    }
-    for p in prompts:
-        item = {
-            "id": p.id,
-            "text": p.text,
-            "image": p.image,
-            "url": p.media_url(),
-            "create_at": p.create_at.strftime("%Y-%m-%d %H:%M:%S"),
-        }
-        resp['data'].append(item)
-    
-    resp['matrix'] = list_to_matrix(resp['data'], col=3)
-    return JsonResponse(resp)
+    return prompts
 
 
 def generate_combinations(subject, mediums=[], styles=[], artistes=[], websites=[], resolutions=[], colors=[], lightings=[]):

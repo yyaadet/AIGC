@@ -7,6 +7,7 @@ from .utils import list_to_matrix
 
 class GenerateRequest(models.Model):
     request_body = models.JSONField()
+    combinations = models.JSONField()
     create_at = models.DateTimeField(auto_now_add=True)
 
     @property
@@ -18,6 +19,12 @@ class GenerateRequest(models.Model):
     @property
     def prompt_count(self):
         return Prompt.objects.filter(request=self).count()
+    
+    def prompts(self):
+        return Prompt.objects.filter(request=self)
+    
+    def combination_count(self):
+        return len(self.combinations)
 
 
 class Prompt(models.Model):

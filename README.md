@@ -10,6 +10,8 @@ Requirements:
 3. Django 4.2
 4. Apple M1
 
+We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) now.
+
 # Install
 
 First, run command `./install.sh`

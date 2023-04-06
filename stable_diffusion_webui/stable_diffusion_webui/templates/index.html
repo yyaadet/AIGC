@@ -24,7 +24,7 @@ Generate Image
         </form>
     </div>
     <div class="col-8">
-        <h1>Generated Images</h1>
+        <h1>Generated Images <small class="text-muted" id="loader"></small></h1>
         <div id="images"></div>
     </div>
 </div>
@@ -51,7 +51,9 @@ $(document).ready(function(e){
         });
         o['subject'] = o['subject'][0];
         console.debug("request body ", o);
-
+        // send request
+        addLoading("loader");
+        let start = new Date();
         $.ajax({
             url: "/generate_image/",
             type: "POST",
@@ -59,20 +61,11 @@ $(document).ready(function(e){
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function(resp) {
-                btn.removeClass("disabled");
-                
-                var content = "";
-                for(const row of resp.matrix) {
-                    content += "<div class='row'>";
-                    for(const item of row) {
-                        let itemHtml = render_image(item);
-                        content += itemHtml;
-                    }
-                    content += "</div>";
-                }
+                let reqId = resp.id;
 
-                $("#images").html(content);
-                
+                window.setTimeout(function(){
+                    getRequestPrompts(reqId, resp.combs.length, start);
+                }, 1000);
             },
             error: function(err) {
                 console.error(err);
@@ -81,6 +74,7 @@ $(document).ready(function(e){
                 tips.addClass("text-danger");
                 tips.html(err.statusText);
                 btn.removeClass("disabled");
+                removeLoading("loader", start);
             }
 
         });
@@ -88,6 +82,63 @@ $(document).ready(function(e){
         return false;
     });
 });
+
+function addLoading(containerId) {
+    let html = [
+        '<div class="spinner-border text-primary" role="status">',
+        '    <span class="visually-hidden">Loading...</span>',
+        '</div>',
+    ].join("");
+    $("#" + containerId).html(html);
+}
+
+function removeLoading(containerId, start) {
+    let end = new Date();
+    let seconds = (end.getTime() - start.getTime()) / 1000;
+    $("#" + containerId).html("Spend " + seconds + " seconds");
+}
+
+function getRequestPrompts(req_id, n_comb, start) {
+
+    $.ajax({
+        url: "/get_generate_request/",
+        type: "GET",
+        data: {req_id: req_id},
+        //contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(resp) {
+            
+            var content = "";
+            for(const row of resp.matrix) {
+                content += "<div class='row'>";
+                for(const item of row) {
+                    let itemHtml = render_image(item);
+                    content += itemHtml;
+                }
+                content += "</div>";
+            }
+            $("#images").html(content);
+            if (resp.n == n_comb) {
+                removeLoading("loader", start);
+                $("#generateBtn").removeClass("disabled");
+            } else {
+                window.setTimeout(function(e) {
+                    getRequestPrompts(req_id, n_comb, start);
+                }, 1000);
+            }
+        },
+        error: function(err) {
+            console.error(err);
+            var tips = $("#tips");
+            tips.removeClass("");
+            tips.addClass("text-danger");
+            tips.html(err.statusText);
+            $("#generateBtn").removeClass("disabled");
+            removeLoading("loader", start);
+        }
+
+    });
+}
 </script>
 
 {% endblock %}

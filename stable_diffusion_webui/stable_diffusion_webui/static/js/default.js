@@ -1,6 +1,6 @@
 
 
-function render_image() {
+function render_image(item) {
     let itemHtml = [
         '<div class="col-4">',
         '  <div class="card">',
