@@ -2,17 +2,29 @@ from django.http import HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.core.paginator import Paginator
 from django.core.files.storage import FileSystemStorage 
+from django.conf import settings
 
+import os
+import pandas as pd
 import json
 import torch
 from itertools import combinations
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
-from .models import Prompt
+from .models import Prompt, GenerateRequest
+from .utils import medium_options, list_to_matrix
+
+
+pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
+pipe = pipe.to("mps")
+pipe.enable_attention_slicing()
 
 
 def index(request):
-    return render(request, "index.html", {})
+    context = {
+        'mediums': medium_options
+    }
+    return render(request, "index.html", context)
 
 
 def get_history_prompts(request):
@@ -77,18 +89,17 @@ def generate_image(request):
     body = json.loads(request.body)
     combs = generate_combinations(
         body['subject'],
-        body['medium'],
-        body['style'],
-        body['artist'],
-        body['website'],
-        body['resolution'],
-        body['color'],
-        body['lighting'],
+        body.get('medium', []),
+        body.get('style', []),
+        body.get('artist', []),
+        body.get('website', []),
+        body.get('resolution', []),
+        body.get('color', []),
+        body.get('lighting', []),
     )
-    pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5", torch_type=torch.float16)
-    pipe = pipe.to("mps")
-    pipe.enable_attention_slicing()
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+    generate_request = GenerateRequest.objects.create(request_body=body)
+
+    #pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
     generator = torch.Generator("mps").manual_seed(body.get("seed", 0))
 
     prompts = []
@@ -104,23 +115,27 @@ def generate_image(request):
         
         prompt = Prompt.objects.create(
             text = text,
-            image = store.path(file_name)
+            image = store.path(file_name),
+            request = generate_request,
         )
         prompts.append(prompt)
 
     resp = {
         "n": len(prompts),
-        "data": []
+        "data": [],
+        'matrix': []
     }
     for p in prompts:
         item = {
             "id": p.id,
             "text": p.text,
             "image": p.image,
+            "url": p.media_url(),
             "create_at": p.create_at.strftime("%Y-%m-%d %H:%M:%S"),
         }
         resp['data'].append(item)
-
+    
+    resp['matrix'] = list_to_matrix(resp['data'], col=3)
     return JsonResponse(resp)
 
 

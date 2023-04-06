@@ -32,6 +32,10 @@ class TestViews(TestCase):
         }
         r = self.client.post("/generate_image/", data=params, content_type="application/json")
         self.assertEqual(r.status_code, 200)
+        
+        data = r.json()
+        print(data)
+        self.assertEqual(data['n'], 1)
 
 
 

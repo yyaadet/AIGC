@@ -1,44 +1,104 @@
 {% extends 'base.html' %}
+{% load inputs %}
 
 
 {% block title %}
-Home
+Generate Image
 {% endblock %}
+
+
 
 {% block body %}
 
-<div class="row text-center mt-5">
-    <div class="col">
-        <div>
-            <h1>
-                <a href="#">Learn Now</a>
-            </h1>
-            <p>Make your reading easy</p>
-        </div>
+<div class="row">
+    <div class="col-4">
+        <h1>Prompt</h1>
+        <form id="generateForm">
+            <div class="mb-3">
+                <label class="form-label">Subject</label>
+                <textarea class="form-control" rows="4" name="subject"></textarea>
+            </div>
+            {% multiple_check "medium" "Medium" mediums %}
+            <p id="tips"></p>
+            <button class="btn btn-primary" id="generateBtn" type="submit">Generate</button>
+        </form>
     </div>
-    <div class="col">
-        <div class="px-5">
-            <img src="{{ url_for('static', filename='img/learn_now.jpg')}}" class="img-thumbnail img-fluid"/>
-        </div>
+    <div class="col-8">
+        <h1>Generated Images</h1>
+        <div id="images"></div>
     </div>
 </div>
 
-<div class="row text-center mt-1">
-    <div class="col">
-        <h1>
-            <a href="#">Play Now</a>
-        </h1>
-        <p>Music, Games and Podcasts</p>
-    </div>
-    <div class="col">
-        <div class="px-5">
-            <img src="{{ url_for('static', filename='img/play_now.jpg')}}" class="img-thumbnail img-fluid" />
-        </div>
-    </div>
-</div>
-<div class="row">
-    <div class="col"></div>
-    <div class="col"></div>
-</div>
+<script>
+$(document).ready(function(e){
+    $("#generateForm").bind("submit", function(e) {
+
+        var form = $("#generateForm");
+        var btn = $("#generateBtn");
+        btn.addClass("disabled");
+
+        var formData = form.serializeArray();
+        console.debug("generate images ", formData);
+
+        // tranform form data to object
+        var o = {};
+        $.each(formData, function(){
+            if (o[this.name]) {
+                o[this.name].push(this.value || '');
+            } else {
+                o[this.name] = [this.value || ""];
+            }
+        });
+        o['subject'] = o['subject'][0];
+        console.debug("request body ", o);
+
+        $.ajax({
+            url: "/generate_image/",
+            type: "POST",
+            data: JSON.stringify(o),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(resp) {
+                btn.removeClass("disabled");
+                
+                var content = "";
+                for(var i=0; i<resp.matrix.length; i++) {
+                    var row = resp.matrix[i];
+                    content += "<div class='row'>";
+                    for(var j=0; j<row.length; j++) {
+                        var item = row[j];
+                        var itemHtml = [
+                            '<div class="col-4">',
+                            '  <div class="card">',
+                            '    <img src="' + item.url + '" class="card-img-top" alt="' + item.text + '" />',
+                            '    <div class="card-body">',
+                            '      <p class="card-text">' + item.text + "</p>",
+                            '    </div>',
+                            '  </div>',
+                            '</div>'
+                        ].join("");
+                        content += itemHtml;
+                    }
+                    content += "</div>";
+                }
+
+                $("#images").html(content);
+                
+            },
+            error: function(err) {
+                console.error(err);
+                var tips = $("#tips");
+                tips.removeClass("");
+                tips.addClass("text-danger");
+                tips.html(err.statusText);
+                btn.removeClass("disabled");
+            }
+
+        });
+
+        return false;
+    });
+});
+</script>
 
 {% endblock %}

@@ -5,16 +5,15 @@
 <html>
   <head>
     <title>{% block title %}{% endblock %}- M1 Stable Diffusion</title>
-    <link href="{{ url_for('static', filename='bootstrap-5.3.0/css/bootstrap.min.css') }}" rel="stylesheet">
-    <script src="{{ url_for('static', filename='bootstrap-5.3.0/js/bootstrap.bundle.min.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/jquery-3.6.4.min.js') }}"></script>
-    <link href="{{ url_for('static', filename='css/default.css') }}" rel="stylesheet">
+    <link href="{% static 'bootstrap-5.3.0/css/bootstrap.min.css' %}" rel="stylesheet">
+    <script src="{% static 'bootstrap-5.3.0/js/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery-3.6.4.min.js' %}"></script>
+    <link href="{% static 'css/default.css' %}" rel="stylesheet">
   </head>
   <body>
-    <div class="container-fluid">
-        <nav class="navbar navbar-expand-lg" style="background-color: #ead458;">
+        <nav class="navbar navbar-expand-lg bg-yellow">
             <div class="container-fluid">
-              <a class="navbar-brand" href="/">Slack Attack</a>
+              <a class="navbar-brand" href="/">M1 Stable Diffusion</a>
               <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
               </button>
@@ -22,33 +21,18 @@
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                   {% block nav %}
                   <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                    <a class="nav-link active" aria-current="page" href="/">Generate</a>
                   </li>
                   <li class="nav-item">
-                    <a class="nav-link" href="/learn">Learn Now</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/play">Play Now</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link" href="/assistance">Assistance</a>
+                    <a class="nav-link" href="#">History</a>
                   </li>
                   {% endblock %}
-                  <li class="nav-item">
-                    <a class="nav-link fw-bolder" href="#" id="fs_large">A |</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link fw-semibold" href="#" id="fs_normal">A |</a>
-                  </li>
-                  <li class="nav-item">
-                    <a class="nav-link fw-normal" href="#" id="fs_small">A |</a>
-                  </li>
               </div>
             </div>
           </nav>
-
-        {% block body %} {% endblock %}
-    </div>
+          <div class="container-fluid">
+            {% block body %} {% endblock %}
+          </div>
     <script>
     </script>
   </body>
