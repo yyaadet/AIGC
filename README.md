@@ -4,6 +4,8 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 
 ![Main Screen](./images/main_screen.png)
 
+![History Screen](./images/history.png)
+
 Requirements:
 1. Python 3.9 or latter
 2. Bootstrap v5.3
