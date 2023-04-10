@@ -17,14 +17,18 @@ Generate Image
             <div class="mb-3">
                 <label class="form-label">Subject</label>
                 <textarea class="form-control" rows="4" name="subject"></textarea>
+                <div class="form-text">You can use your language, for example chinese.</div>
             </div>
-            {% multiple_check "medium" "Medium" mediums %}
+            {% for item in options_list %}
+                {% multiple_check item.input_id item.name item.options %}
+            {% endfor %}
+
             <p id="tips"></p>
             <button class="btn btn-primary" id="generateBtn" type="submit">Generate</button>
         </form>
     </div>
     <div class="col-8">
-        <h1>Generated Images <small class="text-muted" id="loader"></small></h1>
+        <div id="loader"></div>
         <div id="images"></div>
     </div>
 </div>
@@ -85,8 +89,10 @@ $(document).ready(function(e){
 
 function addLoading(containerId) {
     let html = [
-        '<div class="spinner-border text-primary" role="status">',
+        '<div class="alert alert-primary mb-2" role="alert">',
+        '  <div class="spinner-border text-primary" role="status">',
         '    <span class="visually-hidden">Loading...</span>',
+        '  </div>',
         '</div>',
     ].join("");
     $("#" + containerId).html(html);

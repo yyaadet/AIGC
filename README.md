@@ -6,6 +6,11 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 
 ![History Screen](./images/history.png)
 
+Features:
+1. Use your language to write prompt, for example chinese.
+2. One submit could generate multiple images.
+3. Support preserve options of medium and style and artist and resolution.
+
 Requirements:
 1. Python 3.9 or latter
 2. Bootstrap v5.3

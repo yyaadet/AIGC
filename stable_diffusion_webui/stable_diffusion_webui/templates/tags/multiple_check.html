@@ -4,7 +4,7 @@
     {% for opt in options %}
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" name="{{ input_id }}" value="{{ opt.value }}" id="{{ input_id }}">
-        <label class="form-check-label" for="{{ input_id }}">{{ opt.name }}</label>
+        <label class="form-check-label" for="{{ input_id }}" title="{{ opt.info }}">{{ opt.name }}</label>
     </div>
     {% endfor %}
 </div>

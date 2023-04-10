@@ -13,7 +13,8 @@ from itertools import combinations
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 from .models import Prompt, GenerateRequest
-from .utils import medium_options, list_to_matrix, do_paginator
+from .utils import medium_options, style_options, artist_options, resolution_options, \
+    list_to_matrix, do_paginator, translate_chinese_to_english
 
 
 pipe = StableDiffusionPipeline.from_pretrained("runwayml/stable-diffusion-v1-5")
@@ -23,8 +24,14 @@ pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
 
 
 def index(request):
+    options_list = [
+        {"name": "Medium", "input_id": "medium", "options": medium_options},
+        {"name": "Style", "input_id": "style", "options": style_options},
+        {"name": "Artist", "input_id": "artist", "options": artist_options},
+        {"name": "Resolution", "input_id": "resolution", "options": resolution_options},
+    ]
     context = {
-        'mediums': medium_options
+        "options_list": options_list,
     }
     return render(request, "index.html", context)
 
@@ -86,8 +93,10 @@ def generate_image(request):
             } 
     """
     body = json.loads(request.body)
+    subject = body['subject']
+    subject, _  = translate_chinese_to_english(subject)
     combs = generate_combinations(
-        body['subject'],
+        subject,
         body.get('medium', []),
         body.get('style', []),
         body.get('artist', []),
