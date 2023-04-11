@@ -128,3 +128,8 @@ if MEDIA_ROOT.exists() is False:
     MEDIA_ROOT.mkdir(parents=True)
 
 MEDIA_URL = "media/"
+
+MODEL_IDS = [
+    "runwayml/stable-diffusion-v1-5",
+    "stabilityai/stable-diffusion-2-1-unclip",
+]

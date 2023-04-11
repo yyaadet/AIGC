@@ -12,13 +12,59 @@ Generate Image
 
 <div class="row">
     <div class="col-4">
-        <h1>Prompt</h1>
-        <form id="generateForm">
+        <h4>Text 2 Image</h4>
+        <form id="generateForm" class="form">
             <div class="mb-3">
+                <select class="form-select" name="model_id">
+                    <option value="" selected>Select your model</option>
+                    {% for model_id in model_ids %}
+                    <option value="{{ model_id }}">{{ model_id }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="form-label">Guidance Scale</label>
+                <input type="number" name="guidance_scale" value="7.5" class="form-control" />
+                <div class="form-text">Values between 7 and 8.5 are good choices.</div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-1">
+                        <label class="form-label">Width</label>
+                        <input type="integer" class="form-control" name="width" placeholder="px" />
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-1">
+                        <label class="form-label">Height</label>
+                        <input type="integer" class="form-control" name="height" placeholder="px" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-6">
+                    <div class="mb-1">
+                        <label class="form-label" id="stepsLabel">Steps</label>
+                        <input type="range" class="form-range" name="steps" value="20" max="50" min="1" step="1" />
+                        <div class="form-text">Default is 20. Range from 1 to 50</div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-1">
+                        <label class="form-label">Seed</label>
+                        <input type="integer" class="form-control" name="seed" value="0" />
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            
+            <div class="mb-2">
                 <label class="form-label">Subject</label>
                 <textarea class="form-control" rows="4" name="subject"></textarea>
                 <div class="form-text">You can use your language, for example chinese.</div>
             </div>
+
             {% for item in options_list %}
                 {% multiple_check item.input_id item.name item.options %}
             {% endfor %}
@@ -35,6 +81,7 @@ Generate Image
 
 <script>
 $(document).ready(function(e){
+    //bind form submit event
     $("#generateForm").bind("submit", function(e) {
 
         var form = $("#generateForm");
@@ -53,7 +100,13 @@ $(document).ready(function(e){
                 o[this.name] = [this.value || ""];
             }
         });
+        o['model_id'] = o['model_id'][0];
         o['subject'] = o['subject'][0];
+        o['seed'] = parseInt(o['seed'][0]);
+        o['steps'] = parseInt(o['steps'][0]);
+        o['guidance_scale'] = parseFloat(o['guidance_scale'][0]);
+        o['width'] = parseInt(o['width'][0]);
+        o['height'] = parseInt(o['height'][0]);
         console.debug("request body ", o);
         // send request
         addLoading("loader");
@@ -85,15 +138,27 @@ $(document).ready(function(e){
 
         return false;
     });
+    //bind range change event
+    $("input[name='steps']").bind("change", function(e) {
+        let steps = $("input[name='steps']").val();
+        console.debug("steps is ", steps);
+        let content = [
+            "Steps - ",
+            "<small class='text-secondary'>" + steps + "</small>"
+        ].join("");
+        $("#stepsLabel").html(content);
+    });
 });
 
 function addLoading(containerId) {
     let html = [
-        '<div class="alert alert-primary mb-2" role="alert">',
+        '<div class="mb-3">',
+        '<div class="alert alert-primary" role="alert">',
         '  <div class="spinner-border text-primary" role="status">',
         '    <span class="visually-hidden">Loading...</span>',
         '  </div>',
         '</div>',
+        '</div>'
     ].join("");
     $("#" + containerId).html(html);
 }

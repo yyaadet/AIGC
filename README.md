@@ -2,14 +2,21 @@
 
 An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Silicon
 
+
 ![Main Screen](./images/main_screen.png)
 
 ![History Screen](./images/history.png)
 
-Features:
+# Features:
+
 1. Use your language to write prompt, for example chinese.
-2. One submit could generate multiple images.
+2. One submit could generate multiple images. Improve your prompt writing speed.
 3. Support preserve options of medium and style and artist and resolution.
+
+
+We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1-unclip](https://huggingface.co/stabilityai/stable-diffusion-2-1-unclip) now.
+
+# Install
 
 Requirements:
 1. Python 3.9 or latter
@@ -17,11 +24,7 @@ Requirements:
 3. Django 4.2
 4. Apple M1
 
-We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) now.
-
-# Install
-
-First, run command `./install.sh`
+First, run command `./install.sh`. The script will install python libraries and models.
 
 Open terminal, then run commands below:
 ```
@@ -43,4 +46,5 @@ Use browser to open <http://127.0.0.1:8000/>
 
 - Email: yyaadet@qq.com
 - Weixin MP:
-    ![Weixin MP](./images/weixin_mp.jpg)
+
+        ![Weixin MP](./images/weixin_mp.jpg)
