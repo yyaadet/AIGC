@@ -14,7 +14,7 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 3. Support preserve options of medium and style and artist and resolution.
 
 
-We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1-unclip](https://huggingface.co/stabilityai/stable-diffusion-2-1-unclip) now.
+We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) now.
 
 # Install
 

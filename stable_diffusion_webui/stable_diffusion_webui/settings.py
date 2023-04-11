@@ -131,5 +131,7 @@ MEDIA_URL = "media/"
 
 MODEL_IDS = [
     "runwayml/stable-diffusion-v1-5",
-    "stabilityai/stable-diffusion-2-1-unclip",
+    #"stabilityai/stable-diffusion-2-1-unclip-small",
+    #"stable-diffusion-2-1",
+    "stabilityai/stable-diffusion-2-1",
 ]
