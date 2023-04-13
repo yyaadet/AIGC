@@ -11,9 +11,9 @@ class GenerateRequest(models.Model):
     create_at = models.DateTimeField(auto_now_add=True)
 
     @property
-    def prompt_matrix(self):
+    def prompt_matrix(self, n_col=6):
         prompts = Prompt.objects.filter(request=self)
-        matrix = list_to_matrix(prompts, col=4)
+        matrix = list_to_matrix(prompts, col=n_col)
         return matrix
     
     @property

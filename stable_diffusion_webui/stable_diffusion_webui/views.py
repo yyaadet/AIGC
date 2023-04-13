@@ -215,9 +215,3 @@ def history(request, page=1):
 
     
 
-
-
-    
-    
-
-

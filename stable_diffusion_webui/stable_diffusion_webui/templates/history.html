@@ -25,9 +25,11 @@
     {% for row in generate_request.prompt_matrix %}
     <div class="row">
         {% for item in row %}
-        <div class="col-3">
+        <div class="col-2">
             <div class="card">
-                <img src="{{ item.media_url }}" class="card-img-top" alt="{{ item.text }}">
+                <a target="_blank" href="{{ item.media_url }}">
+                    <img src="{{ item.media_url }}" class="card-img-top" alt="{{ item.text }}">
+                </a>
                 <div class="card-body">
                   <p class="card-text"><strong>Prompt: </strong>{{ item.text }}</p>
                 </div>
