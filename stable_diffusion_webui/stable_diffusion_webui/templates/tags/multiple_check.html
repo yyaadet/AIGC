@@ -1,5 +1,7 @@
-<div class="mb-1">
-    <label class="form-label">{{ label }}: </label>
+<div class="mb-2">
+    <button type="button" class="btn btn-outline-dark btn-sm" id="{{ input_id }}Btn" onclick="selectAllOptions('{{ input_id }}')">
+        Select All {{ label }}
+    </button>
     
     {% for opt in options %}
     <div class="form-check form-check-inline">
@@ -8,3 +10,6 @@
     </div>
     {% endfor %}
 </div>
+
+<script>
+</script>

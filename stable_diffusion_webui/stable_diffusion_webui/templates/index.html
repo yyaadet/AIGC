@@ -16,28 +16,27 @@ Generate Image
         <form id="generateForm" class="form">
             <div class="mb-3">
                 <select class="form-select" name="model_id">
-                    <option value="" selected>Select your model</option>
-                    {% for model_id in model_ids %}
-                    <option value="{{ model_id }}">{{ model_id }}</option>
+                    {% for item in model_ids %}
+                    <option value="{{ item.id }}" {% if item.checked %}selected{%endif%}>{{ item.id }}</option>
                     {% endfor %}
                 </select>
             </div>
             <div class="mb-2">
                 <label class="form-label">Guidance Scale</label>
-                <input type="number" name="guidance_scale" value="7.5" class="form-control" />
+                <input type="number" name="guidance_scale" value="7.5" step="0.1" class="form-control" />
                 <div class="form-text">Values between 7 and 8.5 are good choices.</div>
             </div>
             <div class="row">
                 <div class="col-6">
                     <div class="mb-1">
                         <label class="form-label">Width</label>
-                        <input type="integer" class="form-control" name="width" placeholder="px" />
+                        <input type="integer" class="form-control" name="width" placeholder="" />
                     </div>
                 </div>
                 <div class="col-6">
                     <div class="mb-1">
                         <label class="form-label">Height</label>
-                        <input type="integer" class="form-control" name="height" placeholder="px" />
+                        <input type="integer" class="form-control" name="height" placeholder="" />
                     </div>
                 </div>
             </div>
@@ -74,13 +73,136 @@ Generate Image
         </form>
     </div>
     <div class="col-8">
-        <div id="loader"></div>
+        <div class="row row-cols-lg-auto g-3 align-items-center p-3">
+            <div class="col-12">
+                <select class="form-control" name="n_column">
+                    <option value="2">2 Columns</option>
+                    <option value="3" selected>3 Columns</option>
+                    <option value="4">4 Columns</option>
+                    <option value="6">6 Columns</option>
+                    <option value="12">12 Columns</option>
+                </select>
+            </div>
+            <div class="col-12">
+                <div id="loader"></div>
+            </div>
+        </div>
         <div id="images"></div>
     </div>
 </div>
 
 <script>
+
 $(document).ready(function(e){
+    //functions
+    var resp_images = [];
+   
+    let addLoading = function(containerId) {
+        let html = [
+            '  <div class="spinner-border text-primary" role="status">',
+            '    <span class="visually-hidden">Loading...</span>',
+            '  </div>'
+        ].join("");
+        $("#" + containerId).html(html);
+    };
+
+    let removeLoading = function(containerId, start) {
+        let end = new Date();
+        let seconds = (end.getTime() - start.getTime()) / 1000;
+        $("#" + containerId).html("<span class='text-success'>Spend " + seconds + " seconds</span>");
+    };
+
+    let list2matrix = function(items, n_column) {
+        let m = [];
+
+        //console.log("items ", items, ", length ", items.length, ", n_column ", n_column);
+        for(let i=0; i<items.length; i+=n_column) {
+            let row = [];
+            for (let j=0; j<n_column; j++) {
+                if (i + j >= items.length) {
+                    break;
+                }
+                let item = items[i + j];
+                //console.debug("item is ", item);
+                row.push(structuredClone(item));
+                //console.debug("row is ", row);
+            }
+            m.push(structuredClone(row));
+        }
+
+        return m;
+    };
+
+    let renderImageCard = function(item, n_column) {
+        let col = 12 / n_column;
+        let itemHtml = [
+            '<div class="col-' + col + '">',
+            '  <div class="card">',
+            '    <a target="_blank" href="' + item.url + '"><img src="' + item.url + '" class="card-img-top" alt="' + item.text + '" /></a>',
+            '    <div class="card-body">',
+            '      <p class="card-text">' + item.text + "</p>",
+            '    </div>',
+            '  </div>',
+            '</div>'
+        ].join("");
+
+        return itemHtml;
+    }
+
+    let renderImages = function(images, n_column) {
+        console.debug("images ", images);
+        var content = "";
+        var imagesIndex = [...Array(images.length).keys()];
+        let matrix = list2matrix(imagesIndex, n_column);
+        console.debug("matrix ", matrix);
+        
+        for(const row of matrix) {
+            content += "<div class='row'>";
+            for(const idx of row) {
+                let item = images[idx];
+                let itemHtml = renderImageCard(item, n_column);
+                content += itemHtml;
+            }
+            content += "</div>";
+        }
+        $("#images").html(content);
+    };
+
+    let getRequestPrompts = function(req_id, n_comb, start) {
+
+        $.ajax({
+            url: "/get_generate_request/",
+            type: "GET",
+            data: {req_id: req_id},
+            //contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(resp) {
+                resp_images = resp.data;
+                let n_column = parseInt($("select[name='n_column']").val());
+                renderImages(resp.data, n_column);
+                
+                if (resp.n == n_comb) {
+                    removeLoading("loader", start);
+                    $("#generateBtn").removeClass("disabled");
+                } else {
+                    window.setTimeout(function(e) {
+                        getRequestPrompts(req_id, n_comb, start);
+                    }, 1000);
+                }
+            },
+            error: function(err) {
+                console.error(err);
+                var tips = $("#tips");
+                tips.removeClass("");
+                tips.addClass("text-danger");
+                tips.html(err.statusText);
+                $("#generateBtn").removeClass("disabled");
+                removeLoading("loader", start);
+            }
+
+        });
+    };
+
     //bind form submit event
     $("#generateForm").bind("submit", function(e) {
 
@@ -148,68 +270,13 @@ $(document).ready(function(e){
         ].join("");
         $("#stepsLabel").html(content);
     });
+    //bind column change event
+    $("select[name='n_column']").bind("change", function(e) {
+        let n_column = parseInt($("select[name='n_column']").val());
+        renderImages(resp_images, n_column);   
+    });
 });
 
-function addLoading(containerId) {
-    let html = [
-        '<div class="mb-3">',
-        '<div class="alert alert-primary" role="alert">',
-        '  <div class="spinner-border text-primary" role="status">',
-        '    <span class="visually-hidden">Loading...</span>',
-        '  </div>',
-        '</div>',
-        '</div>'
-    ].join("");
-    $("#" + containerId).html(html);
-}
-
-function removeLoading(containerId, start) {
-    let end = new Date();
-    let seconds = (end.getTime() - start.getTime()) / 1000;
-    $("#" + containerId).html("Spend " + seconds + " seconds");
-}
-
-function getRequestPrompts(req_id, n_comb, start) {
-
-    $.ajax({
-        url: "/get_generate_request/",
-        type: "GET",
-        data: {req_id: req_id},
-        //contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function(resp) {
-            
-            var content = "";
-            for(const row of resp.matrix) {
-                content += "<div class='row'>";
-                for(const item of row) {
-                    let itemHtml = render_image(item);
-                    content += itemHtml;
-                }
-                content += "</div>";
-            }
-            $("#images").html(content);
-            if (resp.n == n_comb) {
-                removeLoading("loader", start);
-                $("#generateBtn").removeClass("disabled");
-            } else {
-                window.setTimeout(function(e) {
-                    getRequestPrompts(req_id, n_comb, start);
-                }, 1000);
-            }
-        },
-        error: function(err) {
-            console.error(err);
-            var tips = $("#tips");
-            tips.removeClass("");
-            tips.addClass("text-danger");
-            tips.html(err.statusText);
-            $("#generateBtn").removeClass("disabled");
-            removeLoading("loader", start);
-        }
-
-    });
-}
 </script>
 
 {% endblock %}

@@ -53,8 +53,7 @@ def get_generate_request(request):
 
     resp = {
         "n": generate_request.prompt_count,
-        "data": [],
-        "matrix": []
+        "data": []
     }
 
     for p in generate_request.prompts():
@@ -66,8 +65,6 @@ def get_generate_request(request):
             "create_at": p.create_at.strftime("%Y-%m-%d %H:%M:%S"),
         }
         resp['data'].append(item)
-
-    resp['matrix'] = list_to_matrix(resp['data'], col=3)
     return JsonResponse(resp)
 
 
