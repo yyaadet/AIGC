@@ -32,6 +32,7 @@ style_options = get_prompt_options("style.csv")
 artist_options = get_prompt_options("artist.csv")
 resolution_options = get_prompt_options("resolution.csv")
 light_options = get_prompt_options("lighting.csv")
+color_options = get_prompt_options('color.csv')
 
 
 def list_to_matrix(items, col):

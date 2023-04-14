@@ -12,6 +12,7 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 1. Use your language to write prompt, for example chinese.
 2. One submit could generate multiple images. Improve your prompt writing speed.
 3. Support preserve options of medium and style and artist and resolution.
+4. Analysis your usage habits. Help you discover best prompt words.
 
 
 We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) now.
@@ -36,6 +37,11 @@ cd stable_diffusion_webui
 python manage.py migrate
 ```
 
+Complete table Prompt.
+```
+python manage.py complete_prompt_word
+```
+
 # Run
 
 Open terminal, then run commands below:
@@ -46,6 +52,10 @@ python manage.py runserver
 
 Use browser to open <http://127.0.0.1:8000/>
 
+# Articles
+
+- [扔掉Diffusers将Mac M1打造成stable diffusion AI绘画机器](https://mp.weixin.qq.com/s?__biz=MjM5NjMzMDQ0Mg==&mid=2648534433&idx=1&sn=52a5a47243cb81be4841e2b3030e85e9&chksm=bec3230489b4aa120771cda1a5917864bad8893a717562a000dc20f2d10be086f62a0ba7ee7a&token=206784746&lang=zh_CN#rd)
+
 # Contact Us
 
 - Email: yyaadet@qq.com
@@ -53,7 +63,3 @@ Use browser to open <http://127.0.0.1:8000/>
 
     ![Weixin MP](./images/weixin_mp.jpg)
 
-
-# Reference
-
-- [扔掉Diffusers将Mac M1打造成stable diffusion AI绘画机器](https://mp.weixin.qq.com/s?__biz=MjM5NjMzMDQ0Mg==&mid=2648534433&idx=1&sn=52a5a47243cb81be4841e2b3030e85e9&chksm=bec3230489b4aa120771cda1a5917864bad8893a717562a000dc20f2d10be086f62a0ba7ee7a&token=206784746&lang=zh_CN#rd)

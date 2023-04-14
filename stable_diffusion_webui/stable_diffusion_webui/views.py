@@ -12,9 +12,9 @@ import torch
 from itertools import combinations
 from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
-from .models import Prompt, GenerateRequest
+from .models import Prompt, GenerateRequest, PromptWordStat
 from .utils import medium_options, style_options, artist_options, resolution_options, light_options, \
-    list_to_matrix, do_paginator, translate_chinese_to_english
+    color_options, list_to_matrix, do_paginator, translate_chinese_to_english
 
 
 
@@ -25,6 +25,7 @@ def index(request):
         {"name": "Artist", "input_id": "artist", "options": artist_options},
         {"name": "Resolution", "input_id": "resolution", "options": resolution_options},
         {"name": "Lighting", "input_id": "lighting", "options": light_options},
+        {"name": "Color", "input_id": "color", "options": color_options},
     ]
     context = {
         "options_list": options_list,
@@ -93,6 +94,8 @@ def generate_image(request):
     body = json.loads(request.body)
     subject = body['subject']
     subject, _  = translate_chinese_to_english(subject)
+    if body['exclude']:
+        body['exclude'], _ = translate_chinese_to_english(body['exclude'])
     combs = generate_combinations(
         subject,
         body.get('medium', []),
@@ -132,7 +135,8 @@ def do_generate_image(body, combs, generate_request):
             generator=generator, 
             width=body.get('width', 512),
             height=body.get('height', 512),
-            guidance_scale=body.get('guidance_scale', 7.5)
+            guidance_scale=body.get('guidance_scale', 7.5),
+            negative_prompt=body.get('exclude')
             ).images[0]
         file_name = str(generate_request.id) + "_" + "_".join(list(comb)) + ".png"
         file_name = store.get_valid_name(file_name)
@@ -142,9 +146,17 @@ def do_generate_image(body, combs, generate_request):
             text = text,
             image = store.path(file_name),
             request = generate_request,
+            mediums = body.get('medium'),
+            styles = body.get('style'),
+            artistes = body.get('artist'),
+            websites = body.get('website'),
+            resolutions = body.get('resolution'),
+            colors = body.get('color'),
+            lightings = body.get('lighting'),
         )
         prompts.append(prompt)
 
+    PromptWordStat.update()
     return prompts
 
 

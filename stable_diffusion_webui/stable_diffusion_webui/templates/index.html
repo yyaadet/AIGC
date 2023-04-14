@@ -63,6 +63,12 @@ Generate Image
                 <textarea class="form-control" rows="4" name="subject"></textarea>
                 <div class="form-text">You can use your language, for example chinese.</div>
             </div>
+            
+            <div class="mb-2">
+                <label class="form-label">Exclude (Negative)</label>
+                <textarea class="form-control" rows="4" name="exclude"></textarea>
+                <div class="form-text">You can use your language, for example chinese.</div>
+            </div>
 
             {% for item in options_list %}
                 {% multiple_check item.input_id item.name item.options %}
@@ -141,6 +147,7 @@ $(document).ready(function(e){
             '    <a target="_blank" href="' + item.url + '"><img src="' + item.url + '" class="card-img-top" alt="' + item.text + '" /></a>',
             '    <div class="card-body">',
             '      <p class="card-text">' + item.text + "</p>",
+            ' .    <p class="card-text text-secondary">Exclude: ' + item.exclude + "</p>",
             '    </div>',
             '  </div>',
             '</div>'
@@ -224,11 +231,20 @@ $(document).ready(function(e){
         });
         o['model_id'] = o['model_id'][0];
         o['subject'] = o['subject'][0];
+        o['exclude'] = o['exclude'][0];
         o['seed'] = parseInt(o['seed'][0]);
         o['steps'] = parseInt(o['steps'][0]);
         o['guidance_scale'] = parseFloat(o['guidance_scale'][0]);
-        o['width'] = parseInt(o['width'][0]);
-        o['height'] = parseInt(o['height'][0]);
+        if (o['width'].length > 0) {
+            o['width'] = parseInt(o['width'][0]);
+        } else {
+            o['width'] = null;
+        }
+        if (o['height'].length > 0) {
+            o['height'] = parseInt(o['height'][0]);
+        } else {
+            o['height'] = null;
+        }
         console.debug("request body ", o);
         // send request
         addLoading("loader");
