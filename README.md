@@ -5,6 +5,8 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 
 ![Main Screen](./images/main_screen.png)
 
+![Main Screen 1](./images/main_screen1.png)
+
 ![History Screen](./images/history.png)
 
 # Features:
