@@ -147,7 +147,7 @@ $(document).ready(function(e){
             '    <a target="_blank" href="' + item.url + '"><img src="' + item.url + '" class="card-img-top" alt="' + item.text + '" /></a>',
             '    <div class="card-body">',
             '      <p class="card-text">' + item.text + "</p>",
-            ' .    <p class="card-text text-secondary">Exclude: ' + item.exclude + "</p>",
+            '      <p class="card-text text-secondary">Exclude: ' + safeString(item.exclude) + "</p>",
             '    </div>',
             '  </div>',
             '</div>'
@@ -155,6 +155,14 @@ $(document).ready(function(e){
 
         return itemHtml;
     }
+
+    let safeString = function(s) {
+        if(s) {
+            return s;
+        } else {
+            return "";
+        }
+    };
 
     let renderImages = function(images, n_column) {
         console.debug("images ", images);
