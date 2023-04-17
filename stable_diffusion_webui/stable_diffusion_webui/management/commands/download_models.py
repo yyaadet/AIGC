@@ -9,7 +9,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         for model_id in settings.MODEL_IDS:
-            StableDiffusionPipeline.from_pretrained(model_id)
+            StableDiffusionPipeline.from_pretrained(model_id, resume_download=True)
             self.stdout.write(
                 self.style.SUCCESS('Successfully download "%s"' % model_id)
             )

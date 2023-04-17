@@ -117,6 +117,7 @@ def generate_image(request):
     return JsonResponse(resp)
 
 
+
 def do_generate_image(body, combs, generate_request):
     model_id = body.get("model_id", "runwayml/stable-diffusion-v1-5") or "runwayml/stable-diffusion-v1-5"
     pipe = StableDiffusionPipeline.from_pretrained(model_id)
