@@ -1,8 +1,14 @@
 <div class="mb-2">
-    <button type="button" class="btn btn-outline-dark btn-sm" id="{{ input_id }}Btn" onclick="selectAllOptions('{{ input_id }}')">
-        Select All {{ label }}
+    <button class="btn btn-outline-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#{{input_id}}Panel" aria-expanded="false" aria-controls="{{input_id}}Panel">
+       {{ label }}
     </button>
     
+    <button type="button" class="btn btn-light btn-sm" id="{{ input_id }}Btn" onclick="selectAllOptions('{{ input_id }}')">
+        Check All
+    </button>
+</div>
+
+<div id="{{ input_id }}Panel" class="collapse">
     {% for opt in options %}
     <div class="form-check form-check-inline">
         <input class="form-check-input" type="checkbox" name="{{ input_id }}" value="{{ opt.value }}" id="{{ input_id }}">
@@ -15,6 +21,3 @@
     </div>
     {% endfor %}
 </div>
-
-<script>
-</script>

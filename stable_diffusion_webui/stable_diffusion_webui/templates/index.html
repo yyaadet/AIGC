@@ -15,47 +15,54 @@ Generate Image
         <h4>Text 2 Image</h4>
         <form id="generateForm" class="form">
             <div class="mb-3">
-                <select class="form-select" name="model_id">
-                    {% for item in model_ids %}
-                    <option value="{{ item.id }}" {% if item.checked %}selected{%endif%}>{{ item.id }}</option>
-                    {% endfor %}
-                </select>
+                <button class="btn btn-outline-dark" type="button" data-bs-toggle="collapse" data-bs-target="#control" aria-expanded="false" aria-controls="control">
+                    Control Generate
+                </button>
             </div>
-            <div class="mb-2">
-                <label class="form-label">Guidance Scale</label>
-                <input type="number" name="guidance_scale" value="7.5" step="0.1" class="form-control" />
-                <div class="form-text">Values between 7 and 8.5 are good choices.</div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="mb-1">
-                        <label class="form-label">Width</label>
-                        <input type="integer" class="form-control" name="width" placeholder="" />
+            <div id="control" class="collapse">
+                <div class="mb-3">
+                    <select class="form-select" name="model_id">
+                        {% for item in model_ids %}
+                        <option value="{{ item.id }}" {% if item.checked %}selected{%endif%}>{{ item.id }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-2">
+                    <label class="form-label">Guidance Scale</label>
+                    <input type="number" name="guidance_scale" value="7.5" step="0.1" class="form-control" />
+                    <div class="form-text">Values between 7 and 8.5 are good choices.</div>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-1">
+                            <label class="form-label">Width</label>
+                            <input type="integer" class="form-control" name="width" placeholder="" />
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-1">
+                            <label class="form-label">Height</label>
+                            <input type="integer" class="form-control" name="height" placeholder="" />
+                        </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="mb-1">
-                        <label class="form-label">Height</label>
-                        <input type="integer" class="form-control" name="height" placeholder="" />
+                <div class="row">
+                    <div class="col-6">
+                        <div class="mb-1">
+                            <label class="form-label" id="stepsLabel">Steps</label>
+                            <input type="range" class="form-range" name="steps" value="20" max="50" min="1" step="1" />
+                            <div class="form-text">Default is 20. Range from 1 to 50</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="mb-1">
+                            <label class="form-label">Seed</label>
+                            <input type="integer" class="form-control" name="seed" value="0" />
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="col-6">
-                    <div class="mb-1">
-                        <label class="form-label" id="stepsLabel">Steps</label>
-                        <input type="range" class="form-range" name="steps" value="20" max="50" min="1" step="1" />
-                        <div class="form-text">Default is 20. Range from 1 to 50</div>
-                    </div>
-                </div>
-                <div class="col-6">
-                    <div class="mb-1">
-                        <label class="form-label">Seed</label>
-                        <input type="integer" class="form-control" name="seed" value="0" />
-                    </div>
-                </div>
-            </div>
 
+            </div>
             <hr />
             
             <div class="mb-2">
