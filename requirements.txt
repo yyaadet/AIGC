@@ -1,2 +1,8 @@
 Django==4.2
 translator
+pandas
+diffusers 
+transformers 
+accelerate 
+scipy 
+safetensors
