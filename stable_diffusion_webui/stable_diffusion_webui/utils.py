@@ -30,6 +30,7 @@ def get_prompt_options(file_name):
 medium_options = get_prompt_options("medium.csv")
 style_options = get_prompt_options("style.csv")
 artist_options = get_prompt_options("artist.csv")
+website_options = get_prompt_options("website.csv")
 resolution_options = get_prompt_options("resolution.csv")
 light_options = get_prompt_options("lighting.csv")
 color_options = get_prompt_options('color.csv')

@@ -14,7 +14,7 @@ from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
 from .models import Prompt, GenerateRequest, PromptWordStat
 from .utils import medium_options, style_options, artist_options, resolution_options, light_options, \
-    color_options, list_to_matrix, do_paginator, translate_chinese_to_english
+    color_options, website_options, list_to_matrix, do_paginator, translate_chinese_to_english
 
 
 
@@ -23,6 +23,7 @@ def index(request):
         {"name": "Medium", "input_id": "medium", "options": medium_options},
         {"name": "Style", "input_id": "style", "options": style_options},
         {"name": "Artist", "input_id": "artist", "options": artist_options},
+        {"name": "Website", "input_id": "website", "options": website_options},
         {"name": "Resolution", "input_id": "resolution", "options": resolution_options},
         {"name": "Lighting", "input_id": "lighting", "options": light_options},
         {"name": "Color", "input_id": "color", "options": color_options},
