@@ -10,8 +10,8 @@ import pandas as pd
 import json
 import torch
 from itertools import combinations
-from diffusers import StableDiffusionPipeline, DPMSolverMultistepScheduler
 
+from .sd_model import default_sd_model
 from .models import Prompt, GenerateRequest, PromptWordStat
 from .utils import medium_options, style_options, artist_options, resolution_options, light_options, \
     color_options, website_options, list_to_matrix, do_paginator, translate_chinese_to_english
@@ -120,10 +120,7 @@ def generate_image(request):
 
 def do_generate_image(body, combs, generate_request):
     model_id = body.get("model_id", "runwayml/stable-diffusion-v1-5") or "runwayml/stable-diffusion-v1-5"
-    pipe = StableDiffusionPipeline.from_pretrained(model_id)
-    pipe = pipe.to("mps")
-    pipe.enable_attention_slicing()
-    pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
+    pipe = default_sd_model.get_model(model_id)
     generator = torch.Generator("mps").manual_seed(body.get("seed", 0))
 
     prompts = []
@@ -157,7 +154,7 @@ def do_generate_image(body, combs, generate_request):
             lightings = body.get('lighting'),
         )
         prompts.append(prompt)
-
+    
     PromptWordStat.update()
     return prompts
 

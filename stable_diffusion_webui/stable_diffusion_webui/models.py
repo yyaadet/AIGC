@@ -107,9 +107,13 @@ class PromptWordStat(models.Model):
                 else:
                     ratio = 0
                 try:
-                    obj = cls.objects.get(category=category, word=word, ratio=ratio)
-                except:
-                    obj = cls(category=category, word=word, hit=hit, ratio=ratio)
+                    obj = cls.objects.get(category=category, word=word)
+                except Exception as e:
+                    print("get {} and {} except: {}".format(category, word, e))
+                    obj = cls(category=category, word=word)
+
+                obj.hit = hit
+                obj.ratio = ratio
                 obj.save()
                 
 
