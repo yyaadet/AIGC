@@ -97,7 +97,7 @@ def generate_image(request):
     subject, _  = translate_chinese_to_english(subject)
     if body['exclude']:
         body['exclude'], _ = translate_chinese_to_english(body['exclude'])
-    combs = generate_combinations(
+    combs = _generate_combinations(
         subject,
         body.get('medium', []),
         body.get('style', []),
@@ -109,7 +109,7 @@ def generate_image(request):
     )
     generate_request = GenerateRequest.objects.create(request_body=body, combinations=combs)
 
-    threading.Timer(1, do_generate_image, args=(body, combs, generate_request)).start()
+    threading.Timer(1, _do_generate_image, args=(body, combs, generate_request)).start()
     resp = {
         "id": generate_request.id,
         "combs": combs
@@ -118,7 +118,7 @@ def generate_image(request):
 
 
 
-def do_generate_image(body, combs, generate_request):
+def _do_generate_image(body, combs, generate_request):
     model_id = body.get("model_id", "runwayml/stable-diffusion-v1-5") or "runwayml/stable-diffusion-v1-5"
     pipe = default_sd_model.get_model(model_id)
     generator = torch.Generator("mps").manual_seed(body.get("seed", 0))
@@ -159,7 +159,7 @@ def do_generate_image(body, combs, generate_request):
     return prompts
 
 
-def generate_combinations(subject, mediums=[], styles=[], artistes=[], websites=[], resolutions=[], colors=[], lightings=[]):
+def _generate_combinations(subject, mediums=[], styles=[], artistes=[], websites=[], resolutions=[], colors=[], lightings=[]):
     visited = []
     queue = []
 

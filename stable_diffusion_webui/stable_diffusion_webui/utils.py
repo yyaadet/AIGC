@@ -34,6 +34,9 @@ website_options = get_prompt_options("website.csv")
 resolution_options = get_prompt_options("resolution.csv")
 light_options = get_prompt_options("lighting.csv")
 color_options = get_prompt_options('color.csv')
+count_of_options = len(medium_options) + len(style_options) + len(artist_options) + len(website_options) + \
+    len(resolution_options) + len(light_options) + len(color_options)
+print("There are {} prompts".format(count_of_options))
 
 
 def list_to_matrix(items, col):

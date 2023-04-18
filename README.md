@@ -15,6 +15,7 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 2. One submit could generate multiple images. Improve your prompt writing speed.
 3. Support preserve options of medium and style and artist and resolution.
 4. Analysis your usage habits. Help you discover best prompt words.
+5. Contains 1048 prompts.
 
 
 We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) now.

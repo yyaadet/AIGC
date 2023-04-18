@@ -4,3 +4,8 @@ let selectAllOptions = function(input_name) {
     console.debug("checkboxes ", checkboxes);
     checkboxes.prop('checked', "checked");
 };
+
+
+let openPromptSearchBox = function(input_id) {
+    let modal = "";
+};
