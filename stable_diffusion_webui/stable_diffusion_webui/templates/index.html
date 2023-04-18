@@ -112,11 +112,12 @@ $(document).ready(function(e){
     //functions
     var resp_images = [];
    
-    let addLoading = function(containerId) {
+    let addLoading = function(containerId, percentage) {
         let html = [
             '  <div class="spinner-border text-primary" role="status">',
             '    <span class="visually-hidden">Loading...</span>',
-            '  </div>'
+            '  </div>',
+            ' <span>' + round(percentage, 2) + '%</span>'
         ].join("");
         $("#" + containerId).html(html);
     };
@@ -209,6 +210,7 @@ $(document).ready(function(e){
                     removeLoading("loader", start);
                     $("#generateBtn").removeClass("disabled");
                 } else {
+                    addLoading("loader", resp.n * 100 / n_comb);
                     window.setTimeout(function(e) {
                         getRequestPrompts(req_id, n_comb, start);
                     }, 1000);
@@ -264,7 +266,7 @@ $(document).ready(function(e){
         }
         console.debug("request body ", o);
         // send request
-        addLoading("loader");
+        addLoading("loader", 0);
         let start = new Date();
         $.ajax({
             url: "/generate_image/",
