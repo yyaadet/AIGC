@@ -14,7 +14,8 @@ from itertools import combinations
 from .sd_model import default_sd_model
 from .models import Prompt, GenerateRequest, PromptWordStat
 from .utils import medium_options, style_options, artist_options, resolution_options, light_options, \
-    color_options, website_options, list_to_matrix, do_paginator, translate_chinese_to_english
+    color_options, website_options, list_to_matrix, do_paginator, translate_chinese_to_english, \
+    all_prompts_df
 
 
 
@@ -224,5 +225,40 @@ def history(request, page=1):
 
     return render(request, "history.html", {'pager': pager, 'prefix': '/history/'})
 
-    
 
+def search(request):
+    """Search prompts. 
+    Request is json format. 
+    {
+        "category": str,
+        "q": str
+    }
+    Returns:
+        {
+            n: int,
+            data: [
+                {"prompt": str, "category": str}
+            ]
+        }
+    """
+    body = json.loads(request.body)
+    category = body.get("category")
+    q = body.get("q")
+
+    df = all_prompts_df
+    if category:
+        df = df[df['category'] == category]
+    
+    if q:
+        df = df[df['Name'].str.contains(q, case=False)]
+
+    data = []
+    for idx, row in df.iterrows():
+        data.append({
+            "name": row['Name'],
+            "info": row['Info'] if not pd.isna(row['Info']) else "",
+            'category': row['category']
+        })
+
+    return JsonResponse({"n": len(data), "data": data})
+    

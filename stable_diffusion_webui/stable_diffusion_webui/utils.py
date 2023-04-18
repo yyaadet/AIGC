@@ -11,12 +11,12 @@ from django.core.paginator import Paginator
 logger = logging.getLogger(__name__)
 
 
-prompt_data = os.path.join(os.path.dirname(__file__), "prompt_data")
+prompt_data_dir = os.path.join(os.path.dirname(__file__), "prompt_data")
 
 
 def get_prompt_options(file_name):
     options = []
-    path = os.path.join(prompt_data, file_name)
+    path = os.path.join(prompt_data_dir, file_name)
     df = pd.read_csv(path)
     for idx, row in df.iterrows():
         options.append({
@@ -37,6 +37,25 @@ color_options = get_prompt_options('color.csv')
 count_of_options = len(medium_options) + len(style_options) + len(artist_options) + len(website_options) + \
     len(resolution_options) + len(light_options) + len(color_options)
 print("There are {} prompts".format(count_of_options))
+
+
+def load_all_prompts():
+    files = os.listdir(prompt_data_dir)
+    df_list = []
+    for filename in files:
+        if filename.find(".csv") < 0:
+            continue
+        path = os.path.join(prompt_data_dir, filename)
+        df = pd.read_csv(path)
+        if 'category' not in df:
+            df['category'] = filename.split(".")[0]
+        df_list.append(df)
+
+    return pd.concat(df_list)
+
+
+all_prompts_df = load_all_prompts()
+
 
 
 def list_to_matrix(items, col):
