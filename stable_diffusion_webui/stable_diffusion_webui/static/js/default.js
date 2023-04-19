@@ -14,13 +14,6 @@ let selectAllOptions = function(input_name) {
 };
 
 
-let openPromptSearchBox = function(input_id) {
-    let modalId = input_id + "OptionsSearchBox";
-    let modal = bootstrap.Modal.getOrCreateInstance("#" + modalId);
-    modal.show();
-};
-
-
 let searchPrompts = function(inputId, q) {
     console.debug("modal shown ", inputId);
     let modalId = inputId + "OptionsSearchBox";
@@ -29,11 +22,13 @@ let searchPrompts = function(inputId, q) {
     let checkboxes = $("input[name='" + inputId + "']:checkbox:checked");
     console.debug("checkboxes ", checkboxes);
     let promptChecked = {};
+    //from checkbox
     for(const cb of checkboxes) {
         const prompt = $(cb).prop("value");
         const checked = $(cb).prop("checked");
         promptChecked[prompt] = checked;
     }
+
     console.debug("promptChecked ", promptChecked);
     
     $.ajax({
@@ -62,6 +57,15 @@ let searchPrompts = function(inputId, q) {
                 if (promptChecked[element.name] == null) {
                     checked = "";
                 }
+                let hit = "";
+                if(element.hit > 0) {
+                    hit = element.hit;
+                }
+
+                let percentage = "";
+                if (element.percentage > 0) {
+                    percentage = element.percentage + "%";
+                }
                 const node = [
                     "<tr>",
                     " <td>",
@@ -74,8 +78,8 @@ let searchPrompts = function(inputId, q) {
                     " </td>",
                     " <td>" + element.info + "</td>",
                     " <td>" + element.category + "</td>",
-                    " <td>" + element.hit + "</td>",
-                    " <td>" + element.percentage + "%</td>",
+                    " <td>" + hit + "</td>",
+                    " <td>" + percentage + "</td>",
                     "</tr>"
                 ].join("");
                 table.append(node);

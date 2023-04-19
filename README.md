@@ -2,12 +2,17 @@
 
 An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Silicon
 
+# Get start
+
+Open the home page to generate image by text.
 
 ![Main Screen](./images/main_screen.png)
 
+Search prompts.
+
 ![Search](./images/search_prompt.png)
 
-![Main Screen 1](./images/main_screen1.png)
+View history generated images.
 
 ![History Screen](./images/history.png)
 

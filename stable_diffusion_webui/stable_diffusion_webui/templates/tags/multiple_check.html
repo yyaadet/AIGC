@@ -39,13 +39,14 @@ $(document).ready(function(e) {
     document.getElementById("{{ input_id }}OptionsSearchBox").addEventListener("shown.bs.modal", function(ev){
         searchPrompts(inputId, "");
     });
+    
+    document.getElementById("{{ input_id }}OptionsSearchBox").addEventListener("hidden.bs.modal", function(ev){
+        showPromptResult(inputId);
+    });
 
     $("#{{ input_id }}OptionsSearchBox").find("#" + inputId + "QueryInput").bind("input", function(ev){
         searchPrompts(inputId, ev.target.value);
     });
     
-    document.getElementById("{{ input_id }}OptionsSearchBox").addEventListener("hidden.bs.modal", function(ev){
-        showPromptResult(inputId);
-    });
 });
 </script>

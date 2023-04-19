@@ -266,8 +266,8 @@ def search(request):
             "name": name,
             "info": row['Info'] if not pd.isna(row['Info']) else "",
             'category': row['category'],
-            'hit': word_hit_map.get(name, ''),
-            'percentage': word_ratio_map.get(name, ''),
+            'hit': word_hit_map.get(name, 0),
+            'percentage': word_ratio_map.get(name, 0),
         })
 
     data = sorted(data, key=lambda x: x['hit'], reverse=True)
