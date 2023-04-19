@@ -251,14 +251,25 @@ def search(request):
     
     if q:
         df = df[df['Name'].str.contains(q, case=False)]
+    
+    prompt_word_stats = PromptWordStat.objects.filter(category=category)
+    word_hit_map = {}
+    word_ratio_map = {}
+    for p in prompt_word_stats:
+        word_hit_map[p.word] = p.hit
+        word_ratio_map[p.word] = round(p.ratio * 100, 2)
 
     data = []
     for idx, row in df.iterrows():
+        name = row['Name']
         data.append({
-            "name": row['Name'],
+            "name": name,
             "info": row['Info'] if not pd.isna(row['Info']) else "",
-            'category': row['category']
+            'category': row['category'],
+            'hit': word_hit_map.get(name, ''),
+            'percentage': word_ratio_map.get(name, ''),
         })
 
+    data = sorted(data, key=lambda x: x['hit'], reverse=True)
     return JsonResponse({"n": len(data), "data": data})
     

@@ -51,6 +51,8 @@ let searchPrompts = function(inputId, q) {
                 " <th>Prompt</th>",
                 " <th>Info</th>",
                 " <th>Category</th>",
+                " <th>Hit</th>",
+                " <th>Hit Percentage</th>",
                 "</tr>"
             ].join("");
             table.html(header);
@@ -72,6 +74,8 @@ let searchPrompts = function(inputId, q) {
                     " </td>",
                     " <td>" + element.info + "</td>",
                     " <td>" + element.category + "</td>",
+                    " <td>" + element.hit + "</td>",
+                    " <td>" + element.percentage + "%</td>",
                     "</tr>"
                 ].join("");
                 table.append(node);
