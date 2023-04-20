@@ -6,3 +6,5 @@ transformers
 accelerate 
 scipy 
 safetensors
+supervisor
+uvicorn[standard]
