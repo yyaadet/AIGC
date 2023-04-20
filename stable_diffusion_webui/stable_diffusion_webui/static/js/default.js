@@ -111,3 +111,67 @@ let showPromptResult = function(inputId) {
     $("#" + inputId + "Result").html(prompts.join(","));
 };
 
+
+let searchPromptsForExample = function(category, q, page_size) {
+    let table = $("table");
+    let modalTips = $("#modal-tips");
+    
+    $.ajax({
+        url: "/search/",
+        type: "POST",
+        data: JSON.stringify({category: category, q: q, size: page_size}),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function(resp) {
+            console.debug("search done ", resp);
+            //append header
+            let header = [
+                "<tr>",
+                " <th></th>",
+                " <th>Prompt</th>",
+                " <th>Info</th>",
+                " <th>Category</th>",
+                " <th>Hit</th>",
+                " <th>Hit Percentage</th>",
+                "</tr>"
+            ].join("");
+            table.html(header);
+
+            for(const element of resp.data) {
+                let hit = "";
+                if(element.hit > 0) {
+                    hit = element.hit;
+                }
+
+                let percentage = "";
+                if (element.percentage > 0) {
+                    percentage = element.percentage + "%";
+                }
+                const node = [
+                    "<tr>",
+                    " <td>",
+                    " </td>",
+                    " <td>",
+                    "    <label class='form-check-label'>" + element.name + "</label>",
+                    " </td>",
+                    " <td>" + element.info + "</td>",
+                    " <td>" + element.category + "</td>",
+                    " <td>" + hit + "</td>",
+                    " <td>" + percentage + "</td>",
+                    "</tr>"
+                ].join("");
+                table.append(node);
+            }
+
+            modalTips.removeClass();
+            modalTips.addClass("text-success text-end");
+            modalTips.html("Found " + resp.n + ", Num page " + resp.n_page);
+        },
+        error: function(err) {
+            console.error(err);
+            modalTips.removeClass();
+            modalTips.addClass("text-danger text-end");
+            modalTips.html(err);
+        }
+    });
+};

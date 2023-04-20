@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+
+{% block title %}Example{% endblock %}
+
+
+{% block nav %}
+<li class="nav-item">
+    <a class="nav-link" href="/">Generate</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link" aria-current="page" href="/history/">History</a>
+</li>
+<li class="nav-item">
+    <a class="nav-link active" aria-current="page" href="/example/">Example</a>
+</li>
+{% endblock %}
+
+
+{% block body %}
+<h1 class="text-center mb-3">Search and Discovery Interesting Prompts</h1>
+
+<form class="row row-cols-lg-auto g-3 align-items-center mb-3">
+    <div class="col-12">
+        <select class="form-select" aria-label="Default select example" id="categorySelect">
+            {% for c in categories %}
+            <option value="{{ c }}">{{ c }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="col-12">
+        <input class="form-control" type="text" id="queryInput" placeholder="type your prompt" />
+    </div>
+    <div class="col-12">
+        <div id="modal-tips" class="form-text text-end"></div>
+    </div>
+</form>
+
+<table class="table table-bordered table-sm">
+
+</table>
+
+
+<script>
+$(document).ready(function(e) {
+    const category = $("#categorySelect").val();
+    searchPromptsForExample(category, "", 1000);
+
+    $("#queryInput").bind("input", function(ev){
+        const category = $("#categorySelect").val();
+        searchPromptsForExample(category, ev.target.value, 2000);
+    });
+
+    $("#categorySelect").bind("change", function(ev){
+        const category = $("#categorySelect").val();
+        searchPromptsForExample(category, "", 2000);
+    });
+});
+</script>
+
+
+{% endblock %}

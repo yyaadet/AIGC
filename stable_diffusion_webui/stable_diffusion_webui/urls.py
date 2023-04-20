@@ -29,6 +29,7 @@ urlpatterns = [
     path("history/", views.history, name="history"),   
     path("history/<int:page>", views.history, name="history"),   
     path("search/", views.search, name="search"),   
+    path("example/", views.example, name="example"),   
     
     path('admin/', admin.site.urls),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

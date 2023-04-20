@@ -231,7 +231,9 @@ def search(request):
     Request is json format. 
     {
         "category": str,
-        "q": str
+        "q": str,
+        "page": int,
+        "size": int
     }
     Returns:
         {
@@ -244,10 +246,12 @@ def search(request):
     body = json.loads(request.body)
     category = body.get("category")
     q = body.get("q")
+    page = body.get('page', 1)
+    page_size = body.get('size', 100)
 
     df = all_prompts_df
     if category:
-        df = df[df['category'] == category]
+        df = df[df['Category'] == category]
     
     if q:
         df = df[df['Name'].str.contains(q, case=False)]
@@ -265,11 +269,19 @@ def search(request):
         data.append({
             "name": name,
             "info": row['Info'] if not pd.isna(row['Info']) else "",
-            'category': row['category'],
+            'category': row['Category'],
             'hit': word_hit_map.get(name, 0),
             'percentage': word_ratio_map.get(name, 0),
         })
-
     data = sorted(data, key=lambda x: x['hit'], reverse=True)
-    return JsonResponse({"n": len(data), "data": data})
+
+    pager = do_paginator(data, page, page_size)
+    pager_data = []
+    for item in pager:
+        pager_data.append(item)
+    return JsonResponse({"n": len(data), "data": pager_data, "n_page": pager.paginator.num_pages})
     
+
+def example(request):
+    categories = all_prompts_df['Category'].unique()
+    return render(request, "example.html", {"categories": categories})

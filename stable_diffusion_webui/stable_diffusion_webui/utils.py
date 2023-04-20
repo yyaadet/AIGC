@@ -47,8 +47,8 @@ def load_all_prompts():
             continue
         path = os.path.join(prompt_data_dir, filename)
         df = pd.read_csv(path)
-        if 'category' not in df:
-            df['category'] = filename.split(".")[0]
+        if 'Category' not in df.columns:
+            df['Category'] = filename.split(".")[0]
         df_list.append(df)
 
     return pd.concat(df_list)
