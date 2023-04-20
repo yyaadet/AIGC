@@ -16,13 +16,17 @@ View history generated images.
 
 ![History Screen](./images/history.png)
 
+Discovery prompt.
+
+![example](./images/example.png)
+
 # Features:
 
 1. Use your language to write prompt, for example chinese.
 2. One submit could generate multiple images. Improve your prompt writing speed.
 3. Support preserve options of medium and style and artist and resolution.
 4. Analysis your usage habits. Help you discover best prompt words.
-5. Contains 1048 prompts. Support quick search by keyword.
+5. Contains 15000+ prompts. Support quick search by keyword.
 
 
 We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) now.
