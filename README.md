@@ -70,6 +70,17 @@ Use browser to open <http://127.0.0.1:8000/>
 
 - [扔掉Diffusers将Mac M1打造成stable diffusion AI绘画机器](https://mp.weixin.qq.com/s?__biz=MjM5NjMzMDQ0Mg==&mid=2648534433&idx=1&sn=52a5a47243cb81be4841e2b3030e85e9&chksm=bec3230489b4aa120771cda1a5917864bad8893a717562a000dc20f2d10be086f62a0ba7ee7a&token=206784746&lang=zh_CN#rd)
 
+# Donate 
+
+- AliPay: yyaadet2002@gmail.com
+
+    ![AliPay](./images/zhifubao_donate.jpg)
+
+- Weixin: 
+
+    ![weixin pay](./images/weixin_pay.jpeg)
+
+
 # Contact Us
 
 - Email: yyaadet@qq.com
