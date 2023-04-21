@@ -1,6 +1,6 @@
 #!/bin/sh
 
-WORK_DIR="/data/webapp/m1-stable-diffusion-webui"
+WORK_DIR="/data/webapp/m1-stable-diffusion-webui/stable_diffusion_webui"
 NAME="sd-webui"
 CMD="/data/envs/sd/bin/python ${WORK_DIR}/manage_pro.py"
 TIMEOUT_CMD="/bin/timeout"

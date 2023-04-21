@@ -80,6 +80,7 @@ case "$1" in
     ;;
     stop)
 	    pid=$( get_pid )
+        kill ${pid}
       	wait_for_pid removed ${PID}
         rm -f ${PID}
         echo "Gracefully shutting down ${NAME}, PID ${pid}"
