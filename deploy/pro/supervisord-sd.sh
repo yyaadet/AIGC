@@ -1,14 +1,14 @@
 #!/bin/bash
 #
-# Init file for supervisord-rms
+# Init file for supervisord-sd
 #
 # chkconfig: 2345 55 25
 # description: supervisor server daemon
 #
-# processname: supervisord-rms
+# processname: supervisord-sd
 #
 
-NAME="supervisord-rms"
+NAME="supervisord-sd"
 CONFIG=/etc/supervisord.ini
 if [ ! -f ${CONFIG} ]; then
     CONFIG=/data/webapp/m1-stable-diffusion-webui/deploy/pro/supervisord.ini
@@ -49,7 +49,7 @@ get_pid() {
     if [ -f ${PID} ]; then
         pid=`cat ${PID}`
     else
-        pid=`ps aux | grep "supervisord" | grep "rms/appserver" | grep "pro" | grep -v grep | awk -F " " '{print $2}' | head -n 1`
+        pid=`ps aux | grep "supervisord" | grep "stable-diffusion" | grep -v grep | awk -F " " '{print $2}' | head -n 1`
     fi
 
     echo $pid
@@ -80,11 +80,8 @@ case "$1" in
     ;;
     stop)
 	    pid=$( get_pid )
-        kill ${pid}
-		kill $(ps aux | grep "rms/appserver"  | grep -v grep | awk -F " " '{print $2}')
       	wait_for_pid removed ${PID}
         rm -f ${PID}
-		find /data/webapp/rms | grep -E "(/__pycache__$|\.pyc$|\.pyo$)" | xargs rm -rf
         echo "Gracefully shutting down ${NAME}, PID ${pid}"
     ;;
     reload)
@@ -94,7 +91,7 @@ case "$1" in
     ;;
     status)
         pid=$( get_pid )
-	echo "PID ${pid}"
+	    echo "PID ${pid}"
     ;;
     restart)
         $0 stop
