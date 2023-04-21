@@ -80,6 +80,8 @@ Use browser to open <http://127.0.0.1:8000/>
 
     ![weixin pay](./images/weixin_pay.jpeg)
 
+- Buy cloud server by [my link](https://www.vultr.com/?ref=9411633)
+
 
 # Contact Us
 
