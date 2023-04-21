@@ -11,6 +11,6 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stable_diffusion_webui.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'stable_diffusion_webui.settings_pro')
 
 application = get_asgi_application()

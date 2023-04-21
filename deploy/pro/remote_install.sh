@@ -37,7 +37,7 @@ ssh -t -i ~/Documents/gitroom/devops/deploy/id_rsa root@${h} <<EOF
             /data/envs/sd/bin/pip install -r requirements.txt && \
             cd stable_diffusion_webui && \
             useradd sd && \
-            sudo -u sd /data/envs/sd/bin/python manage.py download_models
+            sudo -u sd /data/envs/sd/bin/python manage_pro.py download_models
 
 EOF
     done
