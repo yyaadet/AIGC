@@ -256,7 +256,11 @@ def search(request):
     if q:
         df = df[df['Name'].str.contains(q, case=False)]
     
-    prompt_word_stats = PromptWordStat.objects.filter(category=category)
+    if category:
+        prompt_word_stats = PromptWordStat.objects.filter(category=category)
+    else:
+        prompt_word_stats = PromptWordStat.objects.all()
+
     word_hit_map = {}
     word_ratio_map = {}
     for p in prompt_word_stats:

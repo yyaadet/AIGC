@@ -23,6 +23,7 @@
 <form class="row row-cols-lg-auto g-3 align-items-center mb-3">
     <div class="col-12">
         <select class="form-select" aria-label="Default select example" id="categorySelect">
+            <option value="">-- Select A Category --</option>
             {% for c in categories %}
             <option value="{{ c }}">{{ c }}</option>
             {% endfor %}
