@@ -122,7 +122,7 @@ def generate_image(request):
 def _do_generate_image(body, combs, generate_request):
     model_id = body.get("model_id", "runwayml/stable-diffusion-v1-5") or "runwayml/stable-diffusion-v1-5"
     pipe = default_sd_model.get_model(model_id)
-    generator = torch.Generator("mps").manual_seed(body.get("seed", 0))
+    generator = torch.Generator(default_sd_model.device).manual_seed(body.get("seed", 0))
 
     prompts = []
     store = FileSystemStorage()
