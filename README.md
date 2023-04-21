@@ -1,6 +1,8 @@
 # m1-stable-diffusion-webui
 
-An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Silicon
+An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Silicon and CUDA and CPU
+
+**Hot: We have support cuda and cpu, not only Apple Silicon M1 and M2 etc.**
 
 # Get start
 

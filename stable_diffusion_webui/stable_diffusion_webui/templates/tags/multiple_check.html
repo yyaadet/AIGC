@@ -33,20 +33,20 @@
 
 
 <script>
-$(document).ready(function(e) {
-    const inputId = "{{ input_id }}";
 
     document.getElementById("{{ input_id }}OptionsSearchBox").addEventListener("shown.bs.modal", function(ev){
+        const inputId = "{{ input_id }}";
         searchPrompts(inputId, "");
     });
     
     document.getElementById("{{ input_id }}OptionsSearchBox").addEventListener("hidden.bs.modal", function(ev){
+        const inputId = "{{ input_id }}";
         showPromptResult(inputId);
     });
 
-    $("#{{ input_id }}OptionsSearchBox").find("#" + inputId + "QueryInput").bind("input", function(ev){
+    $("#{{ input_id }}OptionsSearchBox").find("#{{inputId}}QueryInput").bind("input", function(ev){
+        const inputId = "{{ input_id }}";
         searchPrompts(inputId, ev.target.value);
     });
     
-});
 </script>

@@ -13,7 +13,7 @@ Generate Image
 <div class="row">
     <div class="col-4">
         <h4>Text 2 Image</h4>
-        <form id="generateForm" class="form">
+        <form id="generateForm" class="form" method="post">
             <div class="mb-3">
                 <button class="btn btn-outline-dark btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#control" aria-expanded="false" aria-controls="control">
                     Control Generate
@@ -108,7 +108,7 @@ Generate Image
 
 <script>
 
-$(document).ready(function(e){
+$(document).ready(function(event){
     //functions
     var resp_images = [];
    
@@ -117,7 +117,7 @@ $(document).ready(function(e){
             '  <div class="spinner-border text-primary" role="status">',
             '    <span class="visually-hidden">Loading...</span>',
             '  </div>',
-            ' <span>' + round(percentage, 2) + '%</span>'
+            ' <span>' + Math.round(percentage, 2) + '%</span>'
         ].join("");
         $("#" + containerId).html(html);
     };
@@ -230,8 +230,9 @@ $(document).ready(function(e){
     };
 
     //bind form submit event
-    $("#generateForm").bind("submit", function(e) {
-
+    $("#generateForm").on("submit", function(e) {
+        console.debug("generate form submit");
+        e.preventDefault();
         var form = $("#generateForm");
         var btn = $("#generateBtn");
         btn.addClass("disabled");
