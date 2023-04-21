@@ -74,7 +74,7 @@ Use browser to open <http://127.0.0.1:8000/>
 
 - AliPay: yyaadet2002@gmail.com
 
-    ![AliPay](./images/zhifubao_donate.jpg)
+    ![AliPay](./images/zhifubao_donate.jpeg)
 
 - Weixin: 
 
