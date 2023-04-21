@@ -98,4 +98,4 @@ Use browser to open <http://127.0.0.1:8000/>
 
 # Thanks 
 
-Gou Qiang supplies free server to our. The server hosts the project demo.
+Guo Qiang supplies free server to our. The server hosts the project demo.
