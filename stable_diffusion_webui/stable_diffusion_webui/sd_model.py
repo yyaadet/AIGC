@@ -19,7 +19,7 @@ class SDModel:
             return self.id_pipeline_map[model_id]
         
         pipe = StableDiffusionPipeline.from_pretrained(model_id, resume_download=True)
-        pipe = pipe.to("mps")
+        pipe = pipe.to(self.device)
         pipe.enable_attention_slicing()
         pipe.scheduler = DPMSolverMultistepScheduler.from_config(pipe.scheduler.config)
         self.id_pipeline_map[model_id] = pipe
