@@ -8,7 +8,8 @@ class Command(BaseCommand):
     help = "Download all models"
 
     def handle(self, *args, **options):
-        for model_id in settings.MODEL_IDS:
+        for item in settings.MODEL_IDS:
+            model_id = item['id']
             StableDiffusionPipeline.from_pretrained(model_id, resume_download=True)
             self.stdout.write(
                 self.style.SUCCESS('Successfully download "%s"' % model_id)
