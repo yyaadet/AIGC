@@ -96,6 +96,10 @@ Use browser to open <http://127.0.0.1:8000/>
 
     ![Weixin MP](./images/weixin_mp.jpg)
 
+# Our other projects
+
+- [documents search](https://github.com/yyaadet/documents-search-help)
+
 # Thanks 
 
 Guo Qiang supplies free server to our. The server hosts the project demo.
