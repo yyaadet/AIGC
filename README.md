@@ -6,7 +6,7 @@ An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Sil
 
 # Get start
 
-You can try our demo site. [Click here](http://stable-diffusion.51zhi.com/)
+You can try our demo site. [https://stable-diffusion.51zhi.com/](https://stable-diffusion.51zhi.com/)
 
 Open the home page to generate image by text.
 
