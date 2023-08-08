@@ -25,6 +25,7 @@ from . import views
 urlpatterns = [
     path("", views.index, name="index"),   
     path("generate_image/", views.generate_image, name="generate_image"),   
+    path("stop_generate/", views.stop_generate, name="stop_generate"),   
     path("get_generate_request/", views.get_generate_request, name="get_generate_request"),   
     path("history/", views.history, name="history"),   
     path("history/<int:page>/", views.history, name="history"),   

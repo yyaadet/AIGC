@@ -130,8 +130,7 @@ if MEDIA_ROOT.exists() is False:
 MEDIA_URL = "media/"
 
 MODEL_IDS = [
-    {"id": "runwayml/stable-diffusion-v1-5", "checked": True},
-    #"stabilityai/stable-diffusion-2-1-unclip-small",
-    #"stable-diffusion-2-1",
-    {"id": "stabilityai/stable-diffusion-2-1", "checked": False},
+    {"id": "stabilityai/stable-diffusion-xl-base-1.0", 'refine_id':'stabilityai/stable-diffusion-xl-refiner-1.0', "checked": True},
+    #{"id": "runwayml/stable-diffusion-v1-5", "checked": False},
+    #{"id": "stabilityai/stable-diffusion-2-1", "checked": False},
 ]

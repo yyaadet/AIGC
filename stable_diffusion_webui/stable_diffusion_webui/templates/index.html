@@ -50,8 +50,8 @@ Generate Image
                     <div class="col-6">
                         <div class="mb-1">
                             <label class="form-label" id="stepsLabel">Steps</label>
-                            <input type="range" class="form-range" name="steps" value="20" max="50" min="1" step="1" />
-                            <div class="form-text">Default is 20. Range from 1 to 50</div>
+                            <input type="range" class="form-range" name="steps" value="40" max="50" min="1" step="1" />
+                            <div class="form-text">Default is 40. Range from 1 to 50</div>
                         </div>
                     </div>
                     <div class="col-6">
@@ -84,6 +84,7 @@ Generate Image
 
             <p id="tips"></p>
             <button class="btn btn-primary mb-5" id="generateBtn" type="submit">Generate</button>
+            <a id="stopBtn" href="#" class="btn btn-warning mb-5">Stop</a>
         </form>
 
     </div>
@@ -111,6 +112,7 @@ Generate Image
 $(document).ready(function(event){
     //functions
     var resp_images = [];
+    var serverThreadId = null;
    
     let addLoading = function(containerId, percentage) {
         let html = [
@@ -203,6 +205,7 @@ $(document).ready(function(event){
             dataType: "json",
             success: function(resp) {
                 resp_images = resp.data;
+                serverThreadId = resp.thread_id;
                 let n_column = parseInt($("select[name='n_column']").val());
                 renderImages(resp.data, n_column);
                 
@@ -296,6 +299,36 @@ $(document).ready(function(event){
 
         return false;
     });
+    //bind stop
+    $("#stopBtn").bind("click", function(e){
+        e.preventDefault();
+
+        $.ajax({
+            url: "/stop_generate/",
+            type: "GET",
+            data: {thread_id: serverThreadId},
+            //contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function(resp) {
+                if (resp.ok) {
+                    $("#generateBtn").removeClass("disabled");
+                }
+            },
+            error: function(err) {
+                console.error(err);
+                var tips = $("#tips");
+                tips.removeClass("");
+                tips.addClass("text-danger");
+                tips.html(err.statusText);
+                $("#generateBtn").removeClass("disabled");
+                removeLoading("loader", start);
+            }
+
+        });
+
+        return false;
+    });
+
     //bind range change event
     $("input[name='steps']").bind("change", function(e) {
         let steps = $("input[name='steps']").val();

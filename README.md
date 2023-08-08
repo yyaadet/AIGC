@@ -1,6 +1,6 @@
-# m1-stable-diffusion-webui
+# AIGC
 
-An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Silicon and CUDA and CPU
+An Web UI with intelligent prompts of Stable Diffusion with Core ML on Apple Silicon and CUDA and CPU. Other AIGC tools latter, for example audio generate, music generate etc.
 
 **Notice: We have support cuda and cpu, not only Apple Silicon M1 and M2 etc.**
 
@@ -31,12 +31,7 @@ Discovery prompt.
 3. Support preserve options of medium and style and artist and resolution.
 4. Analysis your usage habits. Help you discover best prompt words.
 5. Contains 15000+ prompts. Support quick search by keyword.
-
-
-We support [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) and [stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) now.
-
-- The model [runwayml/stable-diffusion-v1-5](https://huggingface.co/runwayml/stable-diffusion-v1-5) speed is around 1.x s/item.
-- The model [stable-diffusion-2-1](https://huggingface.co/stabilityai/stable-diffusion-2-1) speed is greater than 2.x s/item.
+6. Support SDXL 1.0 model.
 
 
 # Install

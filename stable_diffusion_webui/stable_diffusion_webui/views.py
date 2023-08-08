@@ -110,18 +110,30 @@ def generate_image(request):
     )
     generate_request = GenerateRequest.objects.create(request_body=body, combinations=combs)
 
-    threading.Timer(1, _do_generate_image, args=(body, combs, generate_request)).start()
+    th = threading.Timer(1, _do_generate_image, args=(body, combs, generate_request))
+    th.start()
     resp = {
         "id": generate_request.id,
-        "combs": combs
+        "combs": combs,
+        #"thread_id": th,
     }
     return JsonResponse(resp)
 
 
+def stop_generate(request):
+    thread_id = request.GET['thread_id']
+    if thread_id:
+        thread_id = int(thread_id)
+        os.kill(thread_id, 9)
+        return JsonResponse({"ok": True})
+    else:
+        return JsonResponse({"ok": False})
 
-def _do_generate_image(body, combs, generate_request):
-    model_id = body.get("model_id", "runwayml/stable-diffusion-v1-5") or "runwayml/stable-diffusion-v1-5"
-    pipe = default_sd_model.get_model(model_id)
+
+def _do_generate_image(body, combs, generate_request, high_noise_frac=0.8):
+    default_sd_model.initial_models()
+    pipe = default_sd_model.base_model
+    refine_pipe = default_sd_model.refine_model
     generator = torch.Generator(default_sd_model.device).manual_seed(body.get("seed", 0))
 
     prompts = []
@@ -133,11 +145,19 @@ def _do_generate_image(body, combs, generate_request):
             text, 
             num_inference_steps=body.get('steps', 20), 
             generator=generator, 
-            width=body.get('width', 512),
-            height=body.get('height', 512),
-            guidance_scale=body.get('guidance_scale', 7.5),
-            negative_prompt=body.get('exclude')
+            width=body.get('width', 728),
+            height=body.get('height', 728),
+            #guidance_scale=body.get('guidance_scale', 7.5),
+            negative_prompt=body.get('exclude'),
+            denoising_end=high_noise_frac
             ).images[0]
+
+        image = refine_pipe(
+            prompt=text,
+            num_inference_steps=body.get('steps', 20), 
+            denoising_start=high_noise_frac,
+            image=image
+        ).images[0]
         file_name = str(generate_request.id) + "_" + "_".join(list(comb)) + ".png"
         file_name = store.get_valid_name(file_name)
         image.save(store.path(file_name))
